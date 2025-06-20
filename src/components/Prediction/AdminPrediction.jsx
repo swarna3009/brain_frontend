@@ -29,7 +29,7 @@ const AdminPrediction = () => {
     formData.append('email', email);
 
     try {
-      const res = await fetch('http://localhost:5000/predict', {
+      const res = await fetch('https://backend-brain-1.onrender.com/predict', {
         method: 'POST',
         body: formData,
       });
