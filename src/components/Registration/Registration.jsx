@@ -46,7 +46,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/user-register", {
+      const response = await fetch("https://backend-brain-1.onrender.com/user-register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password })
@@ -73,7 +73,7 @@ const Register = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      const res = await fetch("http://localhost:5000/verify-otp", {
+      const res = await fetch("https://backend-brain-1.onrender.com/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp })
