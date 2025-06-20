@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Nav = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const isUser = localStorage.getItem("isUser") === "true";
   const userEmail = localStorage.getItem("userEmail") || "";
   const adminEmail = localStorage.getItem("adminEmail") || "";
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -17,143 +28,169 @@ const Nav = () => {
   };
 
   return (
-    <div className="bg-white font-nunito">
-      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 md:px-6">
-        {/* Logo */}
-  <div className="flex flex-col items-center md:flex-row md:items-center md:space-x-2">
-  <img
-    src="https://storage.googleapis.com/a1aa/image/88f60df2-9c10-4364-32e1-ec98a5bb5860.jpg"
-    alt="Brain icon"
-    className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8"
-  />
-  <span className="mt-1 md:mt-0 bg-blue-600 text-white font-semibold text-xs sm:text-sm md:text-base px-2 py-0.5 rounded-sm select-none text-center md:text-left">
-    Brain Tumor Detection
-  </span>
-</div>
-
-        {/* Mobile menu toggle */}
-        <div className="md:hidden">
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-gray-700 focus:outline-none"
+    <div className={`fixed top-0 left-0 right-0 w-full z-50 transition duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
+      <header
+        className={`bg-[#0B2B47] text-white flex flex-wrap items-center justify-between px-4 md:px-6 transition-all duration-300 ${
+          isScrolled ? 'py-2' : 'py-4'
+        }`}
+      >
+        {/* Logo & Title */}
+        <div className="flex items-center space-x-2">
+          <img
+            src="https://storage.googleapis.com/a1aa/image/88f60df2-9c10-4364-32e1-ec98a5bb5860.jpg"
+            alt="Brain Icon"
+            className={`transition-all duration-300 ${isScrolled ? 'w-6 h-6' : 'w-10 h-10'}`}
+          />
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className={`font-bold tracking-wide uppercase text-white whitespace-nowrap transition-all duration-300 ${
+              isScrolled ? 'text-sm' : 'text-lg sm:text-xl'
+            }`}
           >
-            <i className="fas fa-bars text-xl"></i>
-          </button>
+            NeuroDetect
+          </motion.h1>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6 text-gray-600 text-xs font-semibold tracking-wide">
-          <ul className="flex items-center space-x-6">
-            <li><Link to="/" className="hover:text-gray-900">HOME</Link></li>
-            <li><Link to="/about" className="hover:text-gray-900">ABOUT</Link></li>
+        <nav className="hidden md:flex items-center space-x-5 ml-auto text-sm font-medium">
+          <Link to="/" className="hover:text-blue-300 flex items-center space-x-1">
+            <i className="fas fa-home"></i><span>Home</span>
+          </Link>
+          <Link to="/about" className="hover:text-blue-300 flex items-center space-x-1">
+            <i className="fas fa-info-circle"></i><span>About</span>
+          </Link>
 
-            {isAdmin && (
-              <>
-                <li><Link to="/managecontact" className="hover:text-gray-900">MNGCONTACT</Link></li>
-                <li><Link to="/adminfeedback" className="hover:text-gray-900">MNGFEEDBACK</Link></li>
-                <li><Link to="/adminprediction" className="hover:text-gray-900">MNGPREDICTION</Link></li>
-                <li><Link to="/admin-dashboard" className="hover:text-gray-900">REG USERS</Link></li>
-                <li className="text-blue-600">{adminEmail}</li>
-              </>
-            )}
+          {isAdmin && (
+            <>
+              <Link to="/managecontact" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-envelope-open-text"></i><span>MngContact</span>
+              </Link>
+              <Link to="/adminfeedback" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-comment-dots"></i><span>MngFeedback</span>
+              </Link>
+              <Link to="/adminprediction" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-microscope"></i><span>MngPredictions</span>
+              </Link>
+              <Link to="/admin-dashboard" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-users"></i><span>MngRegUsers</span>
+              </Link>
+            </>
+          )}
 
-            {isUser && !isAdmin && (
-              <>
-                <li><Link to="/prediction" className="hover:text-gray-900">PREDICTION</Link></li>
-                <li><Link to="/contact" className="hover:text-gray-900">CONTACT</Link></li>
-                <li><Link to="/feedback" className="hover:text-gray-900">FEEDBACK</Link></li>
-                <li className="text-blue-600">{userEmail}</li>
-              </>
-            )}
+          {isUser && !isAdmin && (
+            <>
+              <Link to="/prediction" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-brain"></i><span>Prediction</span>
+              </Link>
+              <Link to="/contact" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-envelope"></i><span>Contact</span>
+              </Link>
+              <Link to="/feedback" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-comments"></i><span>Feedback</span>
+              </Link>
+            </>
+          )}
 
-            {(isAdmin || isUser) && (
-              <li className="relative">
-                <div
-                  className="flex items-center space-x-1 cursor-pointer hover:text-gray-900"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  <img
-                    src="https://storage.googleapis.com/a1aa/image/d829813f-f985-4df7-022b-bfc6684752b3.jpg"
-                    alt="User"
-                    className="rounded-full w-5 h-5"
-                  />
-                  <span>{isAdmin ? "ADMIN" : "USER"}</span>
-                  <i className="fas fa-caret-down"></i>
-                </div>
-
-                {dropdownOpen && (
-                  <div className="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded shadow-md py-1 text-sm w-40 z-50">
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Profile</a>
-                    <Link to="/password" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Change Password</Link>
-                    <button onClick={handleLogout} className="block px-4 py-2 hover:bg-gray-100 text-red-700">Logout</button>
+          {(isAdmin || isUser) && (
+            <div className="relative">
+              <div
+                className="flex items-center space-x-1 cursor-pointer hover:text-blue-300"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <img
+                  src="https://storage.googleapis.com/a1aa/image/d829813f-f985-4df7-022b-bfc6684752b3.jpg"
+                  alt="Avatar"
+                  className="w-6 h-6 rounded-full"
+                />
+                <span className="text-xs">{isAdmin ? "Admin" : "User"}</span>
+                <i className="fas fa-caret-down text-xs"></i>
+              </div>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 bg-white text-black border rounded shadow-lg w-44 z-50">
+                  <div className="px-4 py-2 text-sm text-gray-600">
+                    {isAdmin ? adminEmail : userEmail}
                   </div>
-                )}
-              </li>
-            )}
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
 
-            {!isAdmin && !isUser && (
-              <>
-                <li><Link to="/contact" className="hover:text-gray-900">CONTACT</Link></li>
-                <li><Link to="/feedback" className="hover:text-gray-900">FEEDBACK</Link></li>
-                <li><Link to="/user" className="hover:text-gray-900">USER</Link></li>
-                <li>
-                  <Link to="/register" className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 flex items-center space-x-1">
-                    <span>Register</span>
-                    <i className="fas fa-arrow-right"></i>
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
+          {!isAdmin && !isUser && (
+            <>
+              <Link to="/contact" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-envelope"></i><span>Contact</span>
+              </Link>
+              <Link to="/feedback" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-comments"></i><span>Feedback</span>
+              </Link>
+              <Link to="/user" className="hover:text-blue-300 flex items-center space-x-1">
+                <i className="fas fa-user"></i><span>User</span>
+              </Link>
+              <Link
+                to="/register"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition flex items-center space-x-1"
+              >
+                <i className="fas fa-user-plus"></i><span>Register</span>
+              </Link>
+            </>
+          )}
         </nav>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white">
+            <i className="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
       </header>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 px-4 py-2">
-          <ul className="space-y-2 text-xs font-semibold text-gray-700">
-            <li><Link to="/" className="block hover:text-gray-900">HOME</Link></li>
-            <li><Link to="/about" className="block hover:text-gray-900">ABOUT</Link></li>
+        <div className="md:hidden bg-[#0B2B47] text-white px-4 py-3 space-y-2 text-sm font-semibold shadow-md">
+          <Link to="/" className="block flex items-center space-x-2"><i className="fas fa-home"></i><span>Home</span></Link>
+          <Link to="/about" className="block flex items-center space-x-2"><i className="fas fa-info-circle"></i><span>About</span></Link>
 
-            {isAdmin && (
-              <>
-                <li><Link to="/managecontact" className="block hover:text-gray-900">MNGCONTACT</Link></li>
-                <li><Link to="/adminfeedback" className="block hover:text-gray-900">MNGFEEDBACK</Link></li>
-                <li><Link to="/adminprediction" className="block hover:text-gray-900">MNGPREDICTION</Link></li>
-                <li><Link to="/admin-dashboard" className="block hover:text-gray-900">REG USERS</Link></li>
-                <li className="text-blue-600">{adminEmail}</li>
-              </>
-            )}
+          {isAdmin && (
+            <>
+              <Link to="/managecontact" className="block flex items-center space-x-2"><i className="fas fa-envelope-open-text"></i><span>ManageContact</span></Link>
+              <Link to="/adminfeedback" className="block flex items-center space-x-2"><i className="fas fa-comment-dots"></i><span>Manage Feedback</span></Link>
+              <Link to="/adminprediction" className="block flex items-center space-x-2"><i className="fas fa-microscope"></i><span>Manage Predictions</span></Link>
+              <Link to="/admin-dashboard" className="block flex items-center space-x-2"><i className="fas fa-users"></i><span>Users</span></Link>
+            </>
+          )}
 
-            {isUser && !isAdmin && (
-              <>
-                <li><Link to="/prediction" className="block hover:text-gray-900">PREDICTION</Link></li>
-                <li><Link to="/contact" className="block hover:text-gray-900">CONTACT</Link></li>
-                <li><Link to="/feedback" className="block hover:text-gray-900">FEEDBACK</Link></li>
-                <li className="text-blue-600">{userEmail}</li>
-              </>
-            )}
+          {isUser && !isAdmin && (
+            <>
+              <Link to="/prediction" className="block flex items-center space-x-2"><i className="fas fa-brain"></i><span>Prediction</span></Link>
+              <Link to="/contact" className="block flex items-center space-x-2"><i className="fas fa-envelope"></i><span>Contact</span></Link>
+              <Link to="/feedback" className="block flex items-center space-x-2"><i className="fas fa-comments"></i><span>Feedback</span></Link>
+            </>
+          )}
 
-            {(isAdmin || isUser) && (
-              <>
-                <li><Link to="/password" className="block hover:text-gray-900">Change Password</Link></li>
-                <li><button onClick={handleLogout} className="block w-full text-left hover:text-red-700">Logout</button></li>
-              </>
-            )}
+          {(isAdmin || isUser) && (
+            <>
+              <button onClick={handleLogout} className="w-full text-left flex items-center space-x-2 text-red-400"><i className="fas fa-sign-out-alt"></i><span>Logout</span></button>
+            </>
+          )}
 
-            {!isAdmin && !isUser && (
-              <>
-                <li><Link to="/contact" className="block hover:text-gray-900">CONTACT</Link></li>
-                <li><Link to="/feedback" className="block hover:text-gray-900">FEEDBACK</Link></li>
-                <li><Link to="/user" className="block hover:text-gray-900">USER</Link></li>
-                <li>
-                  <Link to="/register" className="block bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-center">
-                    Register <i className="fas fa-arrow-right ml-1"></i>
-                  </Link>
-                </li>
-              </>
-            )}
-          </ul>
+          {!isAdmin && !isUser && (
+            <>
+              <Link to="/contact" className="block flex items-center space-x-2"><i className="fas fa-envelope"></i><span>Contact</span></Link>
+              <Link to="/feedback" className="block flex items-center space-x-2"><i className="fas fa-comments"></i><span>Feedback</span></Link>
+              <Link to="/user" className="block flex items-center space-x-2"><i className="fas fa-user"></i><span>User</span></Link>
+              <Link to="/register" className="block bg-blue-500 text-white text-center px-3 py-1 rounded-full hover:bg-blue-600 transition">
+                <i className="fas fa-user-plus mr-1"></i>Register
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -72,14 +72,14 @@ const ManageContact = () => {
           <nav className="relative mt-1 text-sm text-gray-300 max-w-7xl">
             <span>Home</span>
             <span className="mx-1">/</span>
-            <span className="text-green-600">Contact</span>
+            <span className="text-green-500 font-semibold">Contact</span>
           </nav>
         </header>
       </motion.div>
 
       {/* Message Table */}
       <motion.div
-        className="bg-white rounded-lg shadow-md p-6 max-w-6xl mx-auto"
+        className="bg-white rounded-lg shadow-md p-6 max-w-6xl mx-auto mt-8"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -94,12 +94,13 @@ const ManageContact = () => {
           <p className="text-center text-gray-500">No messages found.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
+            <table className="w-full border-collapse border border-gray-300 text-sm">
               <thead>
                 <tr className="bg-green-600 text-white">
                   <th className="px-4 py-2 border border-gray-300">#</th>
-                  <th className="px-4 py-2 border border-gray-300">Name</th>
+                  <th className="px-4 py-2 border border-gray-300">Full Name</th>
                   <th className="px-4 py-2 border border-gray-300">Email</th>
+                  <th className="px-4 py-2 border border-gray-300">Subject</th>
                   <th className="px-4 py-2 border border-gray-300">Message</th>
                   <th className="px-4 py-2 border border-gray-300">Action</th>
                 </tr>
@@ -108,8 +109,9 @@ const ManageContact = () => {
                 {messages.map((msg, index) => (
                   <tr key={msg._id} className="bg-white even:bg-gray-50">
                     <td className="px-4 py-2 border border-gray-300 text-center">{index + 1}</td>
-                    <td className="px-4 py-2 border border-gray-300">{msg.name || "Unknown"}</td>
+                    <td className="px-4 py-2 border border-gray-300">{msg.fullName || "Unknown"}</td>
                     <td className="px-4 py-2 border border-gray-300">{msg.email || "N/A"}</td>
+                    <td className="px-4 py-2 border border-gray-300">{msg.subject || "N/A"}</td>
                     <td className="px-4 py-2 border border-gray-300">{msg.message || "-"}</td>
                     <td className="px-4 py-2 border border-gray-300 text-center">
                       <button

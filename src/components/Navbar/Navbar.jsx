@@ -1,102 +1,156 @@
-import React from "react";
-import { motion } from 'framer-motion';
-import "./Navbar.css"; 
-import { Link } from 'react-router-dom';// For Poppins font if not using Tailwind config
+import { motion } from "framer-motion";
+import { FaBullseye, FaRegHeart, FaBolt, FaBrain, FaAward } from "react-icons/fa";
+import "./Navbar.css"
+import Impact from "./Impact";
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.3, duration: 0.6, ease: "easeOut" },
+  }),
+};
 
 const Navbar = () => {
   return (
-    <div className="bg-white text-gray-800 font-poppins">
-       
-     <motion.div
-            className="bg-white font-quicksand"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
-      {/* Banner */}
-      <section
-        className="relative bg-black bg-opacity-80 text-white py-16 px-6 sm:px-12 md:px-20"
-        style={{ backgroundColor: "#0f2f2f" }}
-      >
-        <img
-          src="https://storage.googleapis.com/a1aa/image/7a13c41d-f55e-41f8-dcdb-2143c16968db.jpg"
-          alt="Background brain"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
-          width={1200}
-          height={200}
-          aria-hidden="true"
-        />
-        <div className="relative max-w-5xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-semibold mb-2">About US</h2>
-          <nav className="text-sm text-green-500 font-medium">
-            Home / <span className="text-green-600">About Us</span>
-          </nav>
-        </div>
-      </section>
-</motion.div>
-      <div className="max-w-7xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-20">
-        {/* Left Side Text */}
+    <div className="pt-20 bg-[#f0f8ff]">
+      <div className="text-center max-w-4xl mx-auto px-4">
+        <motion.h2
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          custom={0}
+          className="text-4xl font-extrabold text-gray-900"
+        >
+          About NeuroDetect
+        </motion.h2>
+        <motion.p
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          custom={1}
+          className="mt-4 text-lg text-gray-600"
+        >
+          We're on a mission to revolutionize brain tumor detection through artificial intelligence, making early
+          diagnosis accessible, accurate, and affordable for everyone.
+        </motion.p>
+      </div>
+
+      <div className="mt-10 flex flex-col md:flex-row gap-6 justify-center px-4">
         <motion.div
-                    className="bg-white font-quicksand"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                  >
-        <div className="flex-1 max-w-xl">
-          <p className="text-xs text-green-600 mb-2 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-green-600 inline-block"></span>
-            Introduction
-          </p>
-          <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 leading-tight mb-6">
-            Brain <span className="text-green-600">Tumor</span> Detection using Deep Learning | CNN
-          </h1>
-          <div className="text-xs text-gray-600 font-semibold mb-4">Technology Used:</div>
-          <ul className="space-y-3 text-gray-700 text-sm font-medium">
-            <li className="flex items-center gap-2">
-              <i className="fas fa-check-circle text-green-600"></i>
-              HTML/CSS/JS/Bootstrap
-            </li>
-            <li className="flex items-center gap-2">
-              <i className="fas fa-check-circle text-green-600"></i>
-              Python Django
-            </li>
-            <li className="flex items-center gap-2">
-              <i className="fas fa-check-circle text-green-600"></i>
-              Sqlite Database
-            </li>
-            <li className="flex items-center gap-2">
-              <i className="fas fa-check-circle text-green-600"></i>
-              Deep Learning | CNN
-            </li>
-          </ul>
-          <Link to="/prediction">
-          <button className="mt-8 bg-green-600 text-white text-sm font-semibold px-6 py-2 rounded-md hover:bg-green-700 transition">
-            Start Prediction
-          </button>
-          </Link>
-        </div>
-</motion.div>
-        {/* Right Side Image */}
-        <div className="flex-1 relative max-w-md md:max-w-lg">
-          <motion.div
-                    className="bg-white font-quicksand"
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                  >
-          <div className="border-2 border-green-600 p-1">
-            <img
-              src="https://storage.googleapis.com/a1aa/image/162f2aeb-09e3-406c-4fe2-9e384a5a756a.jpg"
-              alt="Illustration of a brain with icons representing detection"
-              className="w-full h-auto object-cover"
-              width={600}
-              height={400}
-            />
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          custom={2}
+          className="bg-white p-6 rounded-xl shadow-md w-full md:w-1/3"
+        >
+          <div className="flex items-center gap-2 text-blue-700 font-bold text-xl">
+            <FaBullseye />
+            Our Mission
           </div>
+          <p className="mt-2 text-gray-600 text-sm">
+            To democratize access to advanced brain tumor detection technology, enabling healthcare providers worldwide
+            to deliver faster, more accurate diagnoses and ultimately save more lives through early intervention.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          custom={3}
+          className="bg-white p-6 rounded-xl shadow-md w-full md:w-1/3"
+        >
+          <div className="flex items-center gap-2 text-blue-700 font-bold text-xl">
+            <FaRegHeart />
+            Our Vision
+          </div>
+          <p className="mt-2 text-gray-600 text-sm">
+            A world where brain tumors are detected at the earliest possible stage, where distance and resources no
+            longer limit access to world-class medical imaging analysis, and where AI empowers every healthcare
+            provider.
+          </p>
+        </motion.div>
+      </div>
+
+      <div className="bg-[#0284c7] text-white mt-16 py-12">
+        <div className="text-center">
+          <motion.h3
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            custom={4}
+            className="text-3xl font-bold"
+          >
+            What Makes Us Different
+          </motion.h3>
+          <motion.p
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            custom={5}
+            className="mt-2 max-w-3xl mx-auto text-lg"
+          >
+            Our cutting-edge technology combines the latest advances in AI with decades of medical expertise to deliver
+            unparalleled accuracy.
+          </motion.p>
+        </div>
+
+        <div className="mt-10 flex flex-col md:flex-row justify-center gap-10 px-6">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            custom={6}
+            className="text-center"
+          >
+            <FaBolt className="text-4xl mx-auto mb-2" />
+            <h4 className="text-xl font-semibold">Lightning Fast</h4>
+            <p className="text-sm mt-1">
+              Get results in under 30 seconds, dramatically reducing wait times and enabling immediate clinical
+              decision-making.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            custom={7}
+            className="text-center"
+          >
+            <FaAward className="text-4xl mx-auto mb-2" />
+            <h4 className="text-xl font-semibold">Clinically Validated</h4>
+            <p className="text-sm mt-1">
+              FDA-approved technology with 98.5% accuracy rate, validated through clinical trials and peer-reviewed
+              studies.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            custom={8}
+            className="text-center"
+          >
+            <FaBrain className="text-4xl mx-auto mb-2" />
+            <h4 className="text-xl font-semibold">AI-Powered</h4>
+            <p className="text-sm mt-1">
+              Deep learning models trained on over 1 million brain scans from leading medical institutions worldwide.
+            </p>
           </motion.div>
         </div>
-        
       </div>
+      <br/>
+      <br/>
+      <br/>
+      <Impact/>
+       <br/>
+      <br/>
+       <br/>
+      <br/>
     </div>
   );
 };

@@ -22,7 +22,8 @@ const AdminFeedback = () => {
       setLoading(false);
     }
   };
-    const handleDelete = async (id) => {
+
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this feedback?");
     if (!confirmDelete) return;
 
@@ -61,7 +62,7 @@ const AdminFeedback = () => {
         <header className="relative w-full h-40 bg-black/80 flex flex-col justify-center px-6 sm:px-12">
           <img
             src="https://storage.googleapis.com/a1aa/image/b95e47d8-0974-478d-ade1-e79096464389.jpg"
-            alt="Abstract brain network background"
+            alt="Brain network background"
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover opacity-30"
           />
@@ -78,7 +79,7 @@ const AdminFeedback = () => {
 
       {/* Feedback Table */}
       <motion.div
-        className="bg-white rounded-lg shadow-md p-6 max-w-5xl mx-auto"
+        className="bg-white rounded-lg shadow-md p-6 max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -98,23 +99,25 @@ const AdminFeedback = () => {
                 <tr className="bg-green-600 text-white">
                   <th className="px-4 py-2 border border-gray-300">#</th>
                   <th className="px-4 py-2 border border-gray-300">Email</th>
+                  <th className="px-4 py-2 border border-gray-300">Name</th>
+                  <th className="px-4 py-2 border border-gray-300">Title</th>
+                  <th className="px-4 py-2 border border-gray-300">Category</th>
+                  <th className="px-4 py-2 border border-gray-300">Rating</th>
                   <th className="px-4 py-2 border border-gray-300">Feedback</th>
-                   <th className="px-4 py-2 border border-gray-300">Action</th>
+                  <th className="px-4 py-2 border border-gray-300">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {feedbackList.map((item, index) => (
-                  <tr key={index} className="bg-white even:bg-gray-50">
+                  <tr key={item._id} className="bg-white even:bg-gray-50">
+                    <td className="px-4 py-2 border border-gray-300 text-center">{index + 1}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.email || "N/A"}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.fullName || "N/A"}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.feedbackTitle || "-"}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.category || "-"}</td>
+                    <td className="px-4 py-2 border border-gray-300 text-center">{item.rating || "-"}</td>
+                    <td className="px-4 py-2 border border-gray-300">{item.detailedFeedback || "-"}</td>
                     <td className="px-4 py-2 border border-gray-300 text-center">
-                      {index + 1}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300">
-                      {item.email?.trim() || "Anonymous"}
-                    </td>
-                    <td className="px-4 py-2 border border-gray-300">
-                      {item.feedback || "No feedback provided."}
-                    </td>
-                     <td className="px-4 py-2 border border-gray-300 text-center">
                       <button
                         onClick={() => handleDelete(item._id)}
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"

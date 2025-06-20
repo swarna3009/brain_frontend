@@ -1,107 +1,98 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import './SendFeedback.css'; // Custom fonts or overrides
+import { useState } from "react";
 
-const Feedback = () => {
-  const [feedback, setFeedback] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+
+export default function Feedback() {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    feedbackTitle: "",
+    category: "General Feedback",
+    rating: 5,
+    detailedFeedback: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-      const email = localStorage.getItem("email");
-      if (!email) {
-        alert("please register or login");
-        return;
-      }
-
-     try {
-
-      const response = await fetch("http://localhost:5000/send-feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ feedback, email })
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setSubmitted(true);
-        setFeedback("");
-        setTimeout(() => setSubmitted(false), 5000);
-      } else {
-        alert(data.message || "Failed to send feedback");
-      }
-    } catch (error) {
-      alert("Server error. Please try again later.");
+     const email = localStorage.getItem('email');
+    if(!email) {
+      alert("register or log in first");
+      return;
     }
+    const res = await fetch("http://localhost:5000/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok) alert("Feedback submitted!");
+    else alert("Submission failed.");
   };
 
   return (
-    <div className="bg-gray-100 font-poppins min-h-screen">
-      {/* Header */}
-      <motion.div
-        className="bg-white font-quicksand"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <header className="relative w-full h-36 sm:h-40 bg-black/80 flex flex-col justify-center px-4 sm:px-10">
-          <img
-            src="https://storage.googleapis.com/a1aa/image/b95e47d8-0974-478d-ade1-e79096464389.jpg"
-            alt="Brain background"
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
-          />
-          <h1 className="relative text-white text-2xl sm:text-3xl font-semibold">
-            Send Feedback
-          </h1>
-          <nav className="relative mt-1 text-xs sm:text-sm text-gray-300">
-            <span>Home</span>
-            <span className="mx-1">/</span>
-            <span className="text-green-500">Send Feedback</span>
-          </nav>
-        </header>
-      </motion.div>
+    <div className="max-w-xl mx-auto bg-white shadow-md rounded-xl p-6 mt-10">
+      <br/>
+      <br/>
+      <h2 className="text-2xl font-bold mb-4">Share Your Experience</h2>
 
-      {/* Main Section */}
-      <main className="w-full px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="max-w-xl mx-auto bg-white rounded-lg p-6 shadow-md">
-          <h2 className="text-center text-gray-800 text-lg sm:text-xl font-semibold mb-4">
-            Feedback!
-          </h2>
+      <div className="mb-4">
+        <label className="block text-gray-700">Overall Rating</label>
+        <div className="text-yellow-500 text-xl">★★★★★</div>
+      </div>
 
-          {!submitted ? (
-            <form onSubmit={handleSubmit}>
-              <textarea
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                className="w-full border border-gray-300 rounded-md resize-none h-28 p-3 text-gray-700 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-green-600"
-                placeholder="Write your feedback here..."
-                required
-              ></textarea>
-
-              <motion.button
-                type="submit"
-                whileTap={{ scale: 0.97 }}
-                className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-md transition"
-              >
-                Send
-              </motion.button>
-            </form>
-          ) : (
-            <motion.div
-              className="text-center text-green-700 text-base font-semibold mt-4"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              ✅ Feedback Sent! Thank you.
-            </motion.div>
-          )}
-        </div>
-      </main>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          type="text"
+          name="fullName"
+          placeholder="Full Name"
+          onChange={handleChange}
+          required
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          onChange={handleChange}
+          required
+          className="w-full p-2 border rounded"
+        />
+        <input
+          type="text"
+          name="feedbackTitle"
+          placeholder="Feedback Title"
+          onChange={handleChange}
+          required
+          className="w-full p-2 border rounded"
+        />
+        <select
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+        >
+          <option>General Feedback</option>
+          <option>Bug Report</option>
+          <option>Feature Request</option>
+        </select>
+        <textarea
+          name="detailedFeedback"
+          placeholder="Your Feedback"
+          onChange={handleChange}
+          rows="4"
+          className="w-full p-2 border rounded"
+        />
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+        >
+          Submit Feedback
+        </button>
+      </form>
+      
     </div>
+    
   );
-};
-
-export default Feedback;
+}
