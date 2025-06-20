@@ -17,7 +17,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/contact", form);
+      await axios.post("https://backend-brain-1.onrender.com/contact", form);
       alert("Message sent successfully!");
       setForm({ fullName: "", email: "", subject: "", message: "" });
     } catch (err) {
