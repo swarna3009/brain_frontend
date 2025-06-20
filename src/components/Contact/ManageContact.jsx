@@ -28,7 +28,7 @@ const ManageContact = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/admin/contacts/${id}`, {
+      const response = await fetch(`https://backend-brain-1.onrender.com/admin/contacts/${id}`, {
         method: "DELETE",
       });
 
