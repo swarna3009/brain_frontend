@@ -48,7 +48,7 @@ const AdminPrediction = () => {
   useEffect(() => {
     const fetchPredictions = async () => {
       try {
-        const response = await fetch("http://localhost:5000/history");
+        const response = await fetch("https://backend-brain-1.onrender.com/history");
         const data = await response.json();
 
         if (response.ok) {
@@ -68,7 +68,7 @@ const AdminPrediction = () => {
 
   const handleDeletePrediction = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/delete-history/${id}`, {
+      const res = await fetch(`https://backend-brain-1.onrender.com/delete-history/${id}`, {
         method: "DELETE",
       });
 
