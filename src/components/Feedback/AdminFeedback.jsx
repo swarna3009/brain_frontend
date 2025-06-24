@@ -7,7 +7,7 @@ const AdminFeedback = () => {
 
   const fetchFeedback = async () => {
     try {
-      const response = await fetch("https://backend-brain-1.onrender.com/get-feedback");
+      const response = await fetch("https://backend-brain-2.onrender.com/get-feedback");
       const data = await response.json();
 
       if (response.ok && data.success) {
@@ -28,7 +28,7 @@ const AdminFeedback = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`https://backend-brain-1.onrender.com/api/delete_feedback/${id}`, {
+      const response = await fetch(`https://backend-brain-2.onrender.com/api/delete_feedback/${id}`, {
         method: "DELETE",
       });
 
