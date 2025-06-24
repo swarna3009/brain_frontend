@@ -11,7 +11,7 @@ const Home = () => {
   const [showHeroBox, setShowHeroBox] = useState(true); // Control hero box visibility
 
   const handleStartPrediction = () => {
-    const userEmail = localStorage.getItem("email");
+    const userEmail = localStorage.getItem("userEmail");
     if (!userEmail) {
       alert("Please register or login first.");
       navigate("/user");
