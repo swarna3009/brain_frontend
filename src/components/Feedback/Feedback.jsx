@@ -22,7 +22,7 @@ export default function Feedback() {
       alert("Register or log in first");
       return;
     }
-    const res = await fetch("https://backend-brain-1.onrender.com/feedback", {
+    const res = await fetch("https://backend-brain-2.onrender.com/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
