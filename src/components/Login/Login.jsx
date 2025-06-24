@@ -8,15 +8,16 @@ const Login = ({ role = "user" }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+    setLoading(true);
 
     try {
       const loginEndpoint = role === "admin" ? "/admin-login" : "/user-login";
-
       const response = await fetch(`https://backend-brain-2.onrender.com${loginEndpoint}`, {
         method: "POST",
         headers: {
@@ -29,32 +30,45 @@ const Login = ({ role = "user" }) => {
 
       if (response.ok && data.success) {
         toast.success("Login Successful!");
-        localStorage.setItem("email", data.email);
+        localStorage.setItem("userEmail", data.email);
 
         if (role === "admin") {
           localStorage.setItem("isAdmin", "true");
           localStorage.removeItem("isUser");
-          navigate("/");
         } else {
           localStorage.setItem("isUser", "true");
           localStorage.removeItem("isAdmin");
-          navigate("/");
         }
+
+        navigate("/");
       } else {
         setMessage(data.message || "Login failed");
       }
-    } catch (error) {
+    } catch {
       setMessage("Error: Could not connect to server");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div
-      className="relative min-h-screen bg-cover top-10 bg-center text-white font-nunito"
-      style={{ backgroundImage: "url('/assets/brain7.jpg')" }}
+      className="relative min-h-screen bg-cover top-5 bg-center text-white font-nunito"
+      style={{ backgroundImage: `url('/assets/brain7.jpg')` }}
     >
-      {/* Overlay dark blur */}
-      <div className="absolute inset-0  bg-opacity-40 backdrop-blur-sm" />
+      {/* Background Blur */}
+      <div className="absolute inset-0 bg-opacity-40 backdrop-blur-sm" />
+
+      {/* Loading Overlay */}
+      {loading && (
+        <motion.div
+          className="absolute inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="w-16 h-16 border-[6px] border-white border-t-transparent rounded-full animate-spin"></div>
+        </motion.div>
+      )}
 
       {/* Header */}
       <motion.div
@@ -94,7 +108,8 @@ const Login = ({ role = "user" }) => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Id"
               required
-              className="w-full bg-white/20 text-white placeholder-white border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+              disabled={loading}
+              className="w-full bg-white/20 text-white placeholder-white border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none disabled:opacity-60"
             />
             <input
               type="password"
@@ -102,13 +117,41 @@ const Login = ({ role = "user" }) => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
-              className="w-full bg-white/20 text-white placeholder-white border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
+              disabled={loading}
+              className="w-full bg-white/20 text-white placeholder-white border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none disabled:opacity-60"
             />
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded transition"
+              disabled={loading}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded transition flex items-center justify-center gap-2 disabled:opacity-70"
             >
-              Sign In
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    ></path>
+                  </svg>
+                  Logging in...
+                </>
+              ) : (
+                "Sign In"
+              )}
             </button>
             {message && (
               <p
