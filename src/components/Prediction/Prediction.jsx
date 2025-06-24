@@ -22,18 +22,20 @@ const Prediction = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    
-   
+    const storedEmail = localStorage.getItem("userEmail");
+
+    if (!selectedFile) return alert("Please choose a file.");
+    if (!storedEmail) return alert("Please register or log in first.");
 
     const formData = new FormData();
     formData.append("file", selectedFile);
-    formData.append("email", email);
+    formData.append("email", storedEmail); // ✅ Always use the latest stored email
 
     setLoading(true);
     setResult(null);
 
     try {
-      const response = await fetch("https://backend-brain-2.onrender.com/predict", {
+      const response = await fetch("https://backend-brain-1.onrender.com/predict", {
         method: "POST",
         body: formData,
       });
