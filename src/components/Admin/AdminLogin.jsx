@@ -16,7 +16,7 @@ const AdminLogin = () => {
   setMessage("");
 
   try {
-    const response = await fetch("https://backend-brain-1.onrender.com/admin-login", {
+    const response = await fetch("https://backend-brain-2.onrender.com/admin-login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
