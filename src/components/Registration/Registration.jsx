@@ -4,130 +4,135 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
 const Register = () => {
-  const [name, setName] = useState(""); 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showOTPInput, setShowOTPInput] = useState(false);
   const [message, setMessage] = useState("");
-  const [otpTimer, setOtpTimer] = useState(0);
-  const [otpSent, setOtpSent] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(0);
   const navigate = useNavigate();
 
-  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
   useEffect(() => {
-    let timer;
-    if (otpTimer > 0) {
-      timer = setInterval(() => {
-        setOtpTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            alert("OTP expired. Please register again with valid email.");
-            setShowOTPInput(false);
-            setOtpSent(false);
-            return 0;
-          }
-          return prev - 1;
-        });
+    let interval;
+    if (showOTPInput && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(timer);
-  }, [otpTimer]);
+
+    if (timer === 0 && showOTPInput) {
+      setShowOTPInput(false);
+      setMessage("OTP expired. Please register again with a valid email.");
+      toast.warning("OTP expired. Please register again.");
+    }
+
+    return () => clearInterval(interval);
+  }, [timer, showOTPInput]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage("");
-
-    if (!isValidEmail(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
+    setLoading(true);
 
     try {
       const response = await fetch("https://backend-brain-2.onrender.com/user-register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await response.json();
-
       if (response.ok && data.success) {
-        alert("OTP sent to your email.");
+        toast.success("OTP sent to your email!");
         setShowOTPInput(true);
-        setOtpSent(true);
-        setOtpTimer(60); // Start 60 sec timer
+        setTimer(60); // start countdown
       } else {
         setShowOTPInput(false);
-        setOtpSent(false);
-        setMessage(data.message || "Registration failed. Please enter a valid email.");
+        setMessage(data.message || "Registration failed. Invalid email.");
       }
     } catch {
       setShowOTPInput(false);
-      setOtpSent(false);
-      setMessage("Error: Could not connect to server.");
+      setMessage("Error: Could not connect to server");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleVerifyOtp = async () => {
+    setLoading(true);
     try {
-      const res = await fetch("https://backend-brain-1.onrender.com/verify-otp", {
+      const res = await fetch("https://backend-brain-2.onrender.com/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp })
+        body: JSON.stringify({ email, otp }),
       });
 
       const data = await res.json();
-
       if (res.ok && data.success) {
         toast.success("OTP Verified! Registration Complete.");
-        localStorage.setItem("email", email);
+        localStorage.setItem("userEmail", email);
         localStorage.setItem("isUser", "true");
+
+        setName("");
+        setEmail("");
+        setPassword("");
+        setOtp("");
+        setTimer(0);
+
         navigate("/");
       } else {
         toast.error(data.message || "Invalid OTP. Please try again.");
       }
     } catch {
-      toast.error("Error: Could not verify OTP.");
+      toast.error("Error: Could not verify OTP");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-   <div
-      className="min-h-screen bg-cover pt-10 bg-center bg-no-repeat font-nunito"
-      style={{ backgroundImage: "url('/assets/brain8.jpg')" }}
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat font-nunito relative"
+      style={{ backgroundImage: `url('/assets/brain8.jpg') `}}
     >
-         <div className="absolute inset-0  bg-opacity-40 backdrop-blur-sm" />
-      
-            {/* Header */}
-            <motion.div
-              className="relative z-10"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <section className="text-center py-14 px-4 sm:px-10 md:px-20 text-white">
-                <h2 className="text-4xl font-bold mb-1">
-                Register
-                </h2>
-                <p className="text-green-300 text-sm">
-                  Home / <span className="text-green-200">User Register</span>
-                </p>
-              </section>
-            </motion.div>
-      
+      <div className="absolute inset-0 bg-opacity-40 backdrop-blur-sm z-0" />
 
-      {/* Transparent Form Section */}
-      <main className="w-full max-w-md mx-auto  px-4 sm:px-6 lg:px-8">
+      {loading && (
         <motion.div
-          className="bg-tansparent bg-opacity-20 backdrop-blur-lg shadow-xl rounded-xl p-6 sm:p-8"
+          className="absolute inset-0 z-50 flex items-center justify-center bg-transparent backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="w-16 h-16 border-[6px] border-green-400 border-t-transparent rounded-full animate-spin"></div>
+        </motion.div>
+      )}
+
+      <motion.div
+        className="relative z-10"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <section className="text-center py-14 px-4 sm:px-10 md:px-20 text-white">
+          <h2 className="text-4xl font-bold mb-1">Register</h2>
+          <p className="text-green-300 text-sm">
+            Home / <span className="text-green-200">User Register</span>
+          </p>
+        </section>
+      </motion.div>
+
+      <main className="w-full max-w-md mx-auto mt-5 px-4 sm:px-6 lg:px-8 relative z-10">
+        <motion.div
+          className="bg-white/10 backdrop-blur-lg shadow-xl rounded-xl p-6 sm:p-8"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-center text-2xl font-bold text-white mb-6">Create an Account</h3>
+          <h3 className="text-center text-2xl font-bold text-white mb-6">
+            Create an Account
+          </h3>
 
           {!showOTPInput ? (
             <form className="space-y-5" onSubmit={handleRegister}>
@@ -157,9 +162,12 @@ const Register = () => {
               />
               <button
                 type="submit"
-                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded transition"
+                disabled={loading}
+                className={`w-full ${
+                  loading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"
+                } text-white font-medium py-2.5 rounded transition`}
               >
-                Register
+                {loading ? "Sending OTP..." : "Register"}
               </button>
               {message && (
                 <p className="mt-4 text-center text-sm text-red-200">{message}</p>
@@ -178,10 +186,17 @@ const Register = () => {
               <button
                 type="button"
                 onClick={handleVerifyOtp}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded transition"
+                disabled={loading}
+                className={`w-full ${
+                  loading ? "bg-gray-500" : "bg-blue-600 hover:bg-blue-700"
+                } text-white font-medium py-2.5 rounded transition`}
               >
-                Verify OTP
+                {loading ? "Verifying..." : "Verify OTP"}
               </button>
+
+              <p className="text-sm text-white text-center">
+                Time left: <span className="font-bold">{timer}</span> seconds
+              </p>
             </div>
           )}
         </motion.div>
