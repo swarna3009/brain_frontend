@@ -22,8 +22,7 @@ const Prediction = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    const storedEmail = localStorage.getItem("userEmail");
-    if (!selectedFile) return alert("choose file ");
+    
    
 
     const formData = new FormData();
