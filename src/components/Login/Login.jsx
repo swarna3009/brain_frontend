@@ -34,7 +34,7 @@ const Login = ({ role = "user" }) => {
         if (role === "admin") {
           localStorage.setItem("isAdmin", "true");
           localStorage.removeItem("isUser");
-          navigate("/admin-dashboard");
+          navigate("/");
         } else {
           localStorage.setItem("isUser", "true");
           localStorage.removeItem("isAdmin");
@@ -43,45 +43,50 @@ const Login = ({ role = "user" }) => {
       } else {
         setMessage(data.message || "Login failed");
       }
-    } catch {
+    } catch (error) {
       setMessage("Error: Could not connect to server");
     }
   };
 
   return (
-    <div className="bg-white text-gray-900 font-nunito min-h-screen">
+    <div
+      className="relative min-h-screen bg-cover top-10 bg-center text-white font-nunito"
+      style={{ backgroundImage: "url('/assets/brain7.jpg')" }}
+    >
+      {/* Overlay dark blur */}
+      <div className="absolute inset-0  bg-opacity-40 backdrop-blur-sm" />
+
+      {/* Header */}
       <motion.div
-        className="bg-white"
+        className="relative z-10"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        <section className="relative bg-black bg-opacity-80 text-white py-14 px-4 sm:px-10 md:px-20">
-          <img
-            src="https://storage.googleapis.com/a1aa/image/7a13c41d-f55e-41f8-dcdb-2143c16968db.jpg"
-            alt="Brain background"
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
-            aria-hidden="true"
-          />
-          <div className="relative max-w-4xl mx-auto text-center md:text-left">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-1">
-              {role === "admin" ? "Admin Login" : "User Login"}
-            </h2>
-            <nav className="text-sm text-green-400">
-              Home / <span className="text-green-600">{role === "admin" ? "Admin Login" : "User Login"}</span>
-            </nav>
-          </div>
+        <section className="text-center py-14 px-4 sm:px-10 md:px-20 text-white">
+          <h2 className="text-4xl font-bold mb-1">
+            {role === "admin" ? "Admin Login" : "User Login"}
+          </h2>
+          <p className="text-green-300 text-sm">
+            Home /{" "}
+            <span className="text-green-200">
+              {role === "admin" ? "Admin" : "User"} Login
+            </span>
+          </p>
         </section>
       </motion.div>
 
-      <main className="w-full max-w-md mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+      {/* Login Form */}
+      <main className="relative z-10 w-full max-w-md mx-auto mt-4 px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="bg-white shadow-lg rounded-lg p-6 sm:p-8"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          className="bg-transparent backdrop-blur-lg border border-white/30 shadow-xl p-8 rounded-2xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <h3 className="text-center text-xl font-semibold mb-6">Login to your account</h3>
+          <h3 className="text-center text-2xl font-semibold mb-6 text-white">
+            Login to your account
+          </h3>
           <form className="space-y-5" onSubmit={handleSubmit}>
             <input
               type="email"
@@ -89,7 +94,7 @@ const Login = ({ role = "user" }) => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Id"
               required
-              className="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+              className="w-full bg-white/20 text-white placeholder-white border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
             />
             <input
               type="password"
@@ -97,7 +102,7 @@ const Login = ({ role = "user" }) => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
               required
-              className="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+              className="w-full bg-white/20 text-white placeholder-white border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none"
             />
             <button
               type="submit"
@@ -106,7 +111,13 @@ const Login = ({ role = "user" }) => {
               Sign In
             </button>
             {message && (
-              <p className={`mt-4 text-center text-sm ${message.toLowerCase().includes("success") ? "text-green-600" : "text-red-600"}`}>
+              <p
+                className={`mt-4 text-center text-sm ${
+                  message.toLowerCase().includes("success")
+                    ? "text-green-300"
+                    : "text-red-300"
+                }`}
+              >
                 {message}
               </p>
             )}

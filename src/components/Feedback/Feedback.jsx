@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import brainBg from "/assets/brain5.jpg"; // Use a good-quality transparent image
 
 export default function Feedback() {
   const [formData, setFormData] = useState({
@@ -17,9 +17,9 @@ export default function Feedback() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-     const email = localStorage.getItem('email');
-    if(!email) {
-      alert("register or log in first");
+    const email = localStorage.getItem("email");
+    if (!email) {
+      alert("Register or log in first");
       return;
     }
     const res = await fetch("https://backend-brain-1.onrender.com/feedback", {
@@ -27,72 +27,92 @@ export default function Feedback() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     });
-    if (res.ok) alert("Feedback submitted!");
-    else alert("Submission failed.");
+    if (res.ok) {
+      alert("Thank you for your feedback!");
+      setFormData({
+        fullName: "",
+        email: "",
+        feedbackTitle: "",
+        category: "General Feedback",
+        rating: 5,
+        detailedFeedback: "",
+      });
+    } else {
+      alert("Submission failed. Please try again.");
+    }
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white shadow-md rounded-xl p-6 mt-10">
-      <br/>
-      <br/>
-      <h2 className="text-2xl font-bold mb-4">Share Your Experience</h2>
+    <div
+      className="min-h-screen flex items-center pt-20 justify-center bg-cover bg-center px-4"
+      style={{ backgroundImage: `url(${brainBg})` }}
+    >
+      <div className="max-w-xl w-full bg-white/30 backdrop-blur-md shadow-2xl rounded-xl p-6 border border-white border-opacity-30">
+        <h2 className="text-3xl font-bold text-center mb-6 text-white">
+          Share Your Experience
+        </h2>
 
-      <div className="mb-4">
-        <label className="block text-gray-700">Overall Rating</label>
-        <div className="text-yellow-500 text-xl">★★★★★</div>
+        <div className="mb-4 text-center">
+          <label className="block text-white font-medium mb-1">
+            Overall Rating
+          </label>
+          <div className="text-yellow-400 text-2xl">★★★</div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-white">
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Full Name"
+            onChange={handleChange}
+            value={formData.fullName}
+            required
+            className="w-full p-3 border border-white/50 rounded bg-white/10 text-white placeholder-white"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            onChange={handleChange}
+            value={formData.email}
+            required
+            className="w-full p-3 border border-white/50 rounded bg-white/10 text-white placeholder-white"
+          />
+          <input
+            type="text"
+            name="feedbackTitle"
+            placeholder="Feedback Title"
+            onChange={handleChange}
+            value={formData.feedbackTitle}
+            required
+            className="w-full p-3 border border-white/50 rounded bg-white/10 text-white placeholder-white"
+          />
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full p-3 border border-white/50 rounded bg-white/10 text-white"
+          >
+            <option className="text-black">General Feedback</option>
+            <option className="text-black">Bug Report</option>
+            <option className="text-black">Feature Request</option>
+          </select>
+          <textarea
+            name="detailedFeedback"
+            placeholder="Your Feedback"
+            onChange={handleChange}
+            value={formData.detailedFeedback}
+            rows="4"
+            className="w-full p-3 border border-white/50 rounded bg-white/10 text-white placeholder-white"
+          />
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition"
+          >
+            Submit Feedback
+          </button>
+        </form>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="fullName"
-          placeholder="Full Name"
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="text"
-          name="feedbackTitle"
-          placeholder="Feedback Title"
-          onChange={handleChange}
-          required
-          className="w-full p-2 border rounded"
-        />
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        >
-          <option>General Feedback</option>
-          <option>Bug Report</option>
-          <option>Feature Request</option>
-        </select>
-        <textarea
-          name="detailedFeedback"
-          placeholder="Your Feedback"
-          onChange={handleChange}
-          rows="4"
-          className="w-full p-2 border rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Submit Feedback
-        </button>
-      </form>
-      
     </div>
-    
   );
 }

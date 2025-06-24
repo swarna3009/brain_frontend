@@ -95,39 +95,39 @@ const Register = () => {
   };
 
   return (
-    <div className="bg-white text-gray-900 font-nunito min-h-screen">
-      {/* Header */}
-      <motion.div
-        className="bg-white"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <section className="relative bg-black bg-opacity-80 text-white py-14 px-4 sm:px-10 md:px-20">
-          <img
-            src="https://storage.googleapis.com/a1aa/image/7a13c41d-f55e-41f8-dcdb-2143c16968db.jpg"
-            alt="Brain background"
-            className="absolute inset-0 w-full h-full object-cover opacity-30"
-            aria-hidden="true"
-          />
-          <div className="relative max-w-4xl mx-auto text-center md:text-left">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-1">User Registration</h2>
-            <nav className="text-sm text-green-400">
-              Home / <span className="text-green-600">Register</span>
-            </nav>
-          </div>
-        </section>
-      </motion.div>
+   <div
+      className="min-h-screen bg-cover pt-10 bg-center bg-no-repeat font-nunito"
+      style={{ backgroundImage: "url('/assets/brain8.jpg')" }}
+    >
+         <div className="absolute inset-0  bg-opacity-40 backdrop-blur-sm" />
+      
+            {/* Header */}
+            <motion.div
+              className="relative z-10"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <section className="text-center py-14 px-4 sm:px-10 md:px-20 text-white">
+                <h2 className="text-4xl font-bold mb-1">
+                Register
+                </h2>
+                <p className="text-green-300 text-sm">
+                  Home / <span className="text-green-200">User Register</span>
+                </p>
+              </section>
+            </motion.div>
+      
 
-      {/* Form */}
-      <main className="w-full max-w-md mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+      {/* Transparent Form Section */}
+      <main className="w-full max-w-md mx-auto  px-4 sm:px-6 lg:px-8">
         <motion.div
-          className="bg-white shadow-lg rounded-lg p-6 sm:p-8"
+          className="bg-tansparent bg-opacity-20 backdrop-blur-lg shadow-xl rounded-xl p-6 sm:p-8"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h3 className="text-center text-xl font-semibold mb-6">Create an Account</h3>
+          <h3 className="text-center text-2xl font-bold text-white mb-6">Create an Account</h3>
 
           {!showOTPInput ? (
             <form className="space-y-5" onSubmit={handleRegister}>
@@ -137,7 +137,7 @@ const Register = () => {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Full Name"
                 required
-                className="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full border border-gray-200 bg-white bg-opacity-80 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
               />
               <input
                 type="email"
@@ -145,7 +145,7 @@ const Register = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email Id"
                 required
-                className="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full border border-gray-200 bg-white bg-opacity-80 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
               />
               <input
                 type="password"
@@ -153,7 +153,7 @@ const Register = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
-                className="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+                className="w-full border border-gray-200 bg-white bg-opacity-80 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
               />
               <button
                 type="submit"
@@ -162,7 +162,7 @@ const Register = () => {
                 Register
               </button>
               {message && (
-                <p className="mt-4 text-center text-sm text-red-600">{message}</p>
+                <p className="mt-4 text-center text-sm text-red-200">{message}</p>
               )}
             </form>
           ) : (
@@ -173,22 +173,12 @@ const Register = () => {
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="Enter OTP sent to your email"
                 required
-                className="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="w-full border border-gray-200 bg-white bg-opacity-80 rounded px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
-              {otpTimer > 0 && (
-                <p className="text-sm text-center text-gray-600">
-                  OTP expires in <span className="font-semibold">{otpTimer}s</span>
-                </p>
-              )}
               <button
                 type="button"
                 onClick={handleVerifyOtp}
-                disabled={!otpSent || otpTimer <= 0}
-                className={`w-full ${
-                  otpSent && otpTimer > 0
-                    ? "bg-blue-600 hover:bg-blue-700"
-                    : "bg-gray-400 cursor-not-allowed"
-                } text-white font-medium py-2.5 rounded transition`}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded transition"
               >
                 Verify OTP
               </button>
