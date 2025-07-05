@@ -96,7 +96,7 @@ const handleVerifyOtp = async () => {
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat font-nunito relative"
-      style={{ backgroundImage: url('/assets/brain7.webp') }}
+      style={{ backgroundImage: url('/assets/brain8.jpg') }}
     >
       <div className="absolute inset-0 bg-opacity-40 backdrop-blur-sm z-0" />
 
