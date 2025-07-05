@@ -18,7 +18,7 @@ const Login = ({ role = "user" }) => {
 
     try {
       const loginEndpoint = role === "admin" ? "/admin-login" : "/user-login";
-      const response = await fetch(`https://backend-brain-2.onrender.com${loginEndpoint}`, {
+      const response = await fetch(http://localhost:5000${loginEndpoint}, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ const Login = ({ role = "user" }) => {
   return (
     <div
       className="relative min-h-screen bg-cover top-5 bg-center text-white font-nunito"
-      style={{ backgroundImage: `url('/assets/brain7.jpg')` }}
+      style={{ backgroundImage: url('/assets/brain7.jpg') }}
     >
       {/* Background Blur */}
       <div className="absolute inset-0 bg-opacity-40 backdrop-blur-sm" />
