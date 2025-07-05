@@ -31,71 +31,72 @@ const Register = () => {
     return () => clearInterval(interval);
   }, [timer, showOTPInput]);
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setLoading(true);
+const handleRegister = async (e) => {
+  e.preventDefault();
+  setMessage("");
+  setLoading(true);
 
-    try {
-      const response = await fetch("https://backend-brain-2.onrender.com/user-register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+  try {
+    const response = await fetch("http://localhost:5000/user-register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-      const data = await response.json();
-      if (response.ok && data.success) {
-        toast.success("OTP sent to your email!");
-        setShowOTPInput(true);
-        setTimer(60); // start countdown
-      } else {
-        setShowOTPInput(false);
-        setMessage(data.message || "Registration failed. Invalid email.");
-      }
-    } catch {
+    const data = await response.json();
+    if (response.ok && data.success) {
+      toast.success("OTP sent to your email!");
+      setShowOTPInput(true);
+      setTimer(60);
+    } else {
+      setMessage(data.message || "Failed to send OTP. Try again.");
+    }
+  } catch {
+    setMessage("Error: Could not connect to server");
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleVerifyOtp = async () => {
+  setLoading(true);
+  try {
+    const res = await fetch("http://localhost:5000/verify-otp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
+
+    const data = await res.json();
+    if (res.ok && data.success) {
+      toast.success("OTP Verified! Registration Complete.");
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("isUser", "true");
+
+      setName("");
+      setEmail("");
+      setPassword("");
+      setOtp("");
+      setTimer(0);
       setShowOTPInput(false);
-      setMessage("Error: Could not connect to server");
-    } finally {
-      setLoading(false);
+
+      navigate("/");
+    } else {
+      toast.error(data.message || "Invalid OTP or registration failed.");
     }
-  };
+  } catch {
+    toast.error("Error: Could not verify and register");
+  } finally {
+    setLoading(false);
+  }
+};
 
-  const handleVerifyOtp = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("https://backend-brain-2.onrender.com/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, otp }),
-      });
 
-      const data = await res.json();
-      if (res.ok && data.success) {
-        toast.success("OTP Verified! Registration Complete.");
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("isUser", "true");
-
-        setName("");
-        setEmail("");
-        setPassword("");
-        setOtp("");
-        setTimer(0);
-
-        navigate("/");
-      } else {
-        toast.error(data.message || "Invalid OTP. Please try again.");
-      }
-    } catch {
-      toast.error("Error: Could not verify OTP");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat font-nunito relative"
-      style={{ backgroundImage: `url('/assets/brain8.jpg') `}}
+      style={{ backgroundImage: url('/assets/brain7.webp') }}
     >
       <div className="absolute inset-0 bg-opacity-40 backdrop-blur-sm z-0" />
 
