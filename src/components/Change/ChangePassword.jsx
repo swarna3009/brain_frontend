@@ -25,7 +25,7 @@ const ChangePassword = ({ email, isAdmin }) => {
     }
 
     try {
-      const response = await axios.post("https://backend-brain-2.onrender.com/change-password", {
+      const response = await axios.post("https://backend-brain-1.onrender.com/change-password", {
         email,
         currentPassword,
         newPassword,
