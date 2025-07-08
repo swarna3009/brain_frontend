@@ -37,7 +37,7 @@ const AdminReg = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/admin-register", {
+      const res = await fetch("https://backend-brain-1.onrender.com/admin-register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -75,7 +75,7 @@ const AdminReg = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/verify-admin-otp", {
+      const res = await fetch("https://backend-brain-1.onrender.com/verify-admin-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -111,7 +111,7 @@ const AdminReg = () => {
     }
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/admin-register", {
+      const res = await fetch("https://backend-brain-1.onrender.com/admin-register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
