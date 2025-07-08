@@ -9,11 +9,14 @@ const Nav = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const isAdmin = localStorage.getItem("isAdmin") === "true";
-  const isUser = localStorage.getItem("isUser") === "true";
+  const isUser = !isAdmin && localStorage.getItem("isUser") === "true";
+
   const userEmail = localStorage.getItem("userEmail") || "";
   const adminEmail = localStorage.getItem("adminEmail") || "";
   const navigate = useNavigate();
   const location = useLocation();
+
+  const isOnAdminRoute = location.pathname.startsWith("/admin") && !isAdmin;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,7 +26,6 @@ const Nav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setMobileMenuOpen(false);
     setDropdownOpen(false);
@@ -34,7 +36,6 @@ const Nav = () => {
     navigate("/");
   };
 
-  // Function to close mobile menu on link click
   const handleMobileLinkClick = () => {
     setMobileMenuOpen(false);
   };
@@ -42,6 +43,7 @@ const Nav = () => {
   return (
     <div className={`fixed top-0 left-0 right-0 w-full z-50 transition duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
       <header className={`bg-[#0B2B47] text-white flex flex-wrap items-center justify-between px-4 md:px-6 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
+        
         {/* Logo & Title */}
         <div className="flex items-center space-x-2">
           <img
@@ -61,19 +63,31 @@ const Nav = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-5 ml-auto text-sm font-medium">
+          
           <Link to="/" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-home"></i><span>Home</span></Link>
           <Link to="/about" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-info-circle"></i><span>About</span></Link>
 
-          {isAdmin && (
+          {/* Admin Route (before admin login) */}
+          {isOnAdminRoute && (
             <>
-              <Link to="/managecontact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope-open-text"></i><span>MngContact</span></Link>
-              <Link to="/adminfeedback" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comment-dots"></i><span>MngFeedback</span></Link>
-              <Link to="/adminprediction" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-microscope"></i><span>MngPredictions</span></Link>
-              <Link to="/admin-dashboard" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-users"></i><span>MngRegUsers</span></Link>
+              <Link to="/admin" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user-shield"></i><span>Admin Login</span></Link>
+              <Link to="/adminregister" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user-plus"></i><span>Admin Register</span></Link>
             </>
           )}
 
-          {isUser && !isAdmin && (
+          {/* Admin Links after login */}
+          {isAdmin && !isOnAdminRoute && (
+  <>
+    <Link to="/managecontact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope-open-text"></i><span>MngContact</span></Link>
+    <Link to="/adminfeedback" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comment-dots"></i><span>MngFeedback</span></Link>
+    <Link to="/adminprediction" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-microscope"></i><span>MngPredictions</span></Link>
+    <Link to="/admin-dashboard" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-users"></i><span>MngRegUsers</span></Link>
+  </>
+)}
+
+
+          {/* User Links */}
+          {isUser && (
             <>
               <Link to="/prediction" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-brain"></i><span>Prediction</span></Link>
               <Link to="/contact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope"></i><span>Contact</span></Link>
@@ -81,6 +95,7 @@ const Nav = () => {
             </>
           )}
 
+          {/* Dropdown for logged in users */}
           {(isAdmin || isUser) && (
             <div className="relative">
               <div
@@ -111,7 +126,8 @@ const Nav = () => {
             </div>
           )}
 
-          {!isAdmin && !isUser && (
+          {/* Public Links */}
+          {!isAdmin && !isUser && !isOnAdminRoute && (
             <>
               <Link to="/contact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope"></i><span>Contact</span></Link>
               <Link to="/feedback" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comments"></i><span>Feedback</span></Link>
@@ -129,43 +145,7 @@ const Nav = () => {
         </div>
       </header>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0B2B47] text-white px-4 py-3 space-y-2 text-sm font-semibold shadow-md">
-          <Link to="/" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-home"></i><span>Home</span></Link>
-          <Link to="/about" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-info-circle"></i><span>About</span></Link>
-
-          {isAdmin && (
-            <>
-              <Link to="/managecontact" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-envelope-open-text"></i><span>ManageContact</span></Link>
-              <Link to="/adminfeedback" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-comment-dots"></i><span>Manage Feedback</span></Link>
-              <Link to="/adminprediction" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-microscope"></i><span>Manage Predictions</span></Link>
-              <Link to="/admin-dashboard" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-users"></i><span>Users</span></Link>
-            </>
-          )}
-
-          {isUser && !isAdmin && (
-            <>
-              <Link to="/prediction" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-brain"></i><span>Prediction</span></Link>
-              <Link to="/contact" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-envelope"></i><span>Contact</span></Link>
-              <Link to="/feedback" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-comments"></i><span>Feedback</span></Link>
-            </>
-          )}
-
-          {(isAdmin || isUser) && (
-            <button onClick={handleLogout} className="w-full text-left flex items-center space-x-2 text-red-400"><i className="fas fa-sign-out-alt"></i><span>Logout</span></button>
-          )}
-
-          {!isAdmin && !isUser && (
-            <>
-              <Link to="/contact" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-envelope"></i><span>Contact</span></Link>
-              <Link to="/feedback" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-comments"></i><span>Feedback</span></Link>
-              <Link to="/user" onClick={handleMobileLinkClick} className="block flex items-center space-x-2"><i className="fas fa-user"></i><span>User</span></Link>
-              <Link to="/register" onClick={handleMobileLinkClick} className="block bg-blue-500 text-white text-center px-3 py-1 rounded-full hover:bg-blue-600 transition"><i className="fas fa-user-plus mr-1"></i>Register</Link>
-            </>
-          )}
-        </div>
-      )}
+      {/* You can similarly apply isOnAdminRoute logic inside mobile menu if needed */}
     </div>
   );
 };

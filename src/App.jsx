@@ -1,5 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Contact from "./components/Contact/Contact";
 import Home from "./components/Home/Home";
 import Navbar from "./components/Navbar/Navbar";
@@ -15,29 +18,30 @@ import ChangePassword from "./components/Change/ChangePassword";
 import AdminFeedback from "./components/Feedback/AdminFeedback";
 import ManagaeContact from "./components/Contact/ManageContact";
 import AdminPrediction from "./components/Prediction/AdminPrediction";
-
+import AdminReg from "./components/Admin/AdminReg"; // ✅ Import AdminReg
 
 function App() {
   return (
     <Router>
-      <Nav/>
+      <Nav />
       <Routes>
-       <Route path="/" element={<Home/>}/>
-       <Route path="/user" element={<Login role="user" />}/>
-       <Route path="/prediction" element={<Prediction/>}/>
-       <Route path="/about" element={<Navbar/>}/>
-      <Route path="/contact" element={<Contact/>}/>
-      <Route path="/feedback" element={<Feedback/>}/>
-      <Route path="/admin" element={<Admin/>}/>
-      <Route path="/register" element={<Registration/>}/>
-      <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
-      <Route path="/password" element={<ChangePassword/>}/>
-      <Route path="/adminfeedback" element={<AdminFeedback/>}/>
-      <Route path="/managecontact" element={<ManagaeContact/>}/>
-      <Route path="/adminprediction" element={<AdminPrediction/>}/>
+        <Route path="/" element={<Home />} />
+        <Route path="/user" element={<Login role="user" />} />
+        <Route path="/prediction" element={<Prediction />} />
+        <Route path="/about" element={<Navbar />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/register" element={<Registration />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/password" element={<ChangePassword />} />
+        <Route path="/adminfeedback" element={<AdminFeedback />} />
+        <Route path="/managecontact" element={<ManagaeContact />} />
+        <Route path="/adminprediction" element={<AdminPrediction />} />
+        <Route path="/adminregister" element={<AdminReg />} /> {/* ✅ New Route */}
       </Routes>
-    
-     <Footer/>
+      <ToastContainer position="top-right" autoClose={3000}/>
+      <Footer />
     </Router>
   );
 }
