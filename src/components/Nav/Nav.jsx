@@ -10,13 +10,14 @@ const Nav = () => {
 
   const isAdmin = localStorage.getItem("isAdmin") === "true";
   const isUser = !isAdmin && localStorage.getItem("isUser") === "true";
-
   const userEmail = localStorage.getItem("userEmail") || "";
   const adminEmail = localStorage.getItem("adminEmail") || "";
+
   const navigate = useNavigate();
   const location = useLocation();
-
-  const isOnAdminRoute = location.pathname.startsWith("/admin") && !isAdmin;
+  
+  // Always show admin menu if route includes /admin
+  const isOnAdminRoute = location.pathname.startsWith("/admin");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,21 +37,52 @@ const Nav = () => {
     navigate("/");
   };
 
-  const handleMobileLinkClick = () => {
-    setMobileMenuOpen(false);
-  };
+  const commonLinks = (
+    <>
+      <Link to="/" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-home"></i><span>Home</span></Link>
+      <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-info-circle"></i><span>About</span></Link>
+    </>
+  );
+
+  const publicLinks = (
+    <>
+      <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope"></i><span>Contact</span></Link>
+      <Link to="/feedback" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comments"></i><span>Feedback</span></Link>
+      <Link to="/user" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user"></i><span>User</span></Link>
+      <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition flex items-center space-x-1"><i className="fas fa-user-plus"></i><span>Register</span></Link>
+    </>
+  );
+
+  const adminLinks = (
+    <>
+      <Link to="/managecontact" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope-open-text"></i><span>MngContact</span></Link>
+      <Link to="/adminfeedback" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comment-dots"></i><span>MngFeedback</span></Link>
+      <Link to="/adminprediction" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-microscope"></i><span>MngPredictions</span></Link>
+      <Link to="/admin-dashboard" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-users"></i><span>MngRegUsers</span></Link>
+    </>
+  );
+
+  const userLinks = (
+    <>
+      <Link to="/prediction" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-brain"></i><span>Prediction</span></Link>
+      <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope"></i><span>Contact</span></Link>
+      <Link to="/feedback" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comments"></i><span>Feedback</span></Link>
+    </>
+  );
+
+  const beforeAdminLoginLinks = (
+    <>
+      <Link to="/admin" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user-shield"></i><span>Admin Login</span></Link>
+      <Link to="/adminregister" onClick={() => setMobileMenuOpen(false)} className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user-plus"></i><span>Admin Register</span></Link>
+    </>
+  );
 
   return (
     <div className={`fixed top-0 left-0 right-0 w-full z-50 transition duration-300 ${isScrolled ? 'shadow-md' : ''}`}>
       <header className={`bg-[#0B2B47] text-white flex flex-wrap items-center justify-between px-4 md:px-6 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}>
-        
-        {/* Logo & Title */}
+        {/* Logo */}
         <div className="flex items-center space-x-2">
-          <img
-            src="/assets/brain9.jpg"
-            alt="Brain Icon"
-            className={`transition-all duration-300 ${isScrolled ? 'w-6 h-6' : 'w-10 h-10'}`}
-          />
+          <img src="/assets/brain9.jpg" alt="Brain Icon" className={`transition-all duration-300 ${isScrolled ? 'w-6 h-6' : 'w-10 h-10'}`} />
           <motion.h1
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -61,41 +93,14 @@ const Nav = () => {
           </motion.h1>
         </div>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-5 ml-auto text-sm font-medium">
-          
-          <Link to="/" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-home"></i><span>Home</span></Link>
-          <Link to="/about" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-info-circle"></i><span>About</span></Link>
+          {commonLinks}
+          {isOnAdminRoute && !isAdmin && beforeAdminLoginLinks}
+          {isAdmin && adminLinks}
+          {isUser && userLinks}
+          {!isAdmin && !isUser && !isOnAdminRoute && publicLinks}
 
-          {/* Admin Route (before admin login) */}
-          {isOnAdminRoute && (
-            <>
-              <Link to="/admin" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user-shield"></i><span>Admin Login</span></Link>
-              <Link to="/adminregister" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user-plus"></i><span>Admin Register</span></Link>
-            </>
-          )}
-
-          {/* Admin Links after login */}
-          {isAdmin && !isOnAdminRoute && (
-  <>
-    <Link to="/managecontact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope-open-text"></i><span>MngContact</span></Link>
-    <Link to="/adminfeedback" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comment-dots"></i><span>MngFeedback</span></Link>
-    <Link to="/adminprediction" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-microscope"></i><span>MngPredictions</span></Link>
-    <Link to="/admin-dashboard" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-users"></i><span>MngRegUsers</span></Link>
-  </>
-)}
-
-
-          {/* User Links */}
-          {isUser && (
-            <>
-              <Link to="/prediction" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-brain"></i><span>Prediction</span></Link>
-              <Link to="/contact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope"></i><span>Contact</span></Link>
-              <Link to="/feedback" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comments"></i><span>Feedback</span></Link>
-            </>
-          )}
-
-          {/* Dropdown for logged in users */}
           {(isAdmin || isUser) && (
             <div className="relative">
               <div
@@ -111,10 +116,8 @@ const Nav = () => {
                 <i className="fas fa-caret-down text-xs"></i>
               </div>
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white text-black border rounded shadow-lg w-44 z-50">
-                  <div className="px-4 py-2 text-sm text-gray-600">
-                    {isAdmin ? adminEmail : userEmail}
-                  </div>
+                <div className="absolute right-0 mt-2 bg-white text-black border rounded shadow-lg w-52 max-w-xs z-50">
+                  <div className="px-4 py-2 text-sm text-gray-600 break-words truncate">{isAdmin ? adminEmail : userEmail}</div>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
@@ -125,19 +128,9 @@ const Nav = () => {
               )}
             </div>
           )}
-
-          {/* Public Links */}
-          {!isAdmin && !isUser && !isOnAdminRoute && (
-            <>
-              <Link to="/contact" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-envelope"></i><span>Contact</span></Link>
-              <Link to="/feedback" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-comments"></i><span>Feedback</span></Link>
-              <Link to="/user" className="hover:text-blue-300 flex items-center space-x-1"><i className="fas fa-user"></i><span>User</span></Link>
-              <Link to="/register" className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition flex items-center space-x-1"><i className="fas fa-user-plus"></i><span>Register</span></Link>
-            </>
-          )}
         </nav>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Toggle Button */}
         <div className="md:hidden">
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-white">
             <i className="fas fa-bars text-2xl"></i>
@@ -145,7 +138,28 @@ const Nav = () => {
         </div>
       </header>
 
-      {/* You can similarly apply isOnAdminRoute logic inside mobile menu if needed */}
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-[#0B2B47] text-white px-4 py-4 space-y-4 text-sm">
+          {commonLinks}
+          {isOnAdminRoute && !isAdmin && beforeAdminLoginLinks}
+          {isAdmin && adminLinks}
+          {isUser && userLinks}
+          {!isAdmin && !isUser && !isOnAdminRoute && publicLinks}
+
+          {(isAdmin || isUser) && (
+            <div className="border-t border-white pt-2">
+              <div className="text-xs text-white mb-2 break-words truncate max-w-full">{isAdmin ? adminEmail : userEmail}</div>
+              <button
+                onClick={handleLogout}
+                className="text-left w-full px-3 py-1 bg-red-600 rounded hover:bg-red-700"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
