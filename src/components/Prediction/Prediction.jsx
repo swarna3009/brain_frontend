@@ -26,7 +26,7 @@ const Prediction = () => {
 
   const refreshCaptcha = () => {
     setUserCaptcha("");
-    setCaptchaImg(`http://localhost:5000/generate-captcha?${Date.now()}`);
+    setCaptchaImg(`https://backend-brain-1.onrender.com/generate-captcha?${Date.now()}`);
     setShowCaptcha(true);
     setOtpSent(false);
   };
@@ -38,27 +38,18 @@ const Prediction = () => {
     setOtpSent(false);
   };
 
-<<<<<<< HEAD
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    const storedEmail = localStorage.getItem("userEmail");
-
-    if (!selectedFile) return alert("Please choose a file.");
-    if (!storedEmail) return alert("Please register or log in first.");
-=======
   const handleUpload = async () => {
     if (!selectedFile) return toast.error("Please select a file.");
->>>>>>> 45bfc52 (Initial commit)
 
     const formData = new FormData();
     formData.append("file", selectedFile);
-    formData.append("email", storedEmail); // ✅ Always use the latest stored email
+    formData.append("email", email);
 
     setLoading(true);
     setResult(null);
 
     try {
-      const response = await fetch("http://localhost:5000/predict", {
+      const response = await fetch("https://backend-brain-1.onrender.com/predict", {
         method: "POST",
         body: formData,
       });
@@ -74,7 +65,7 @@ const Prediction = () => {
   const handleCaptchaSubmit = async () => {
     setVerifying(true);
     try {
-      const res = await fetch("http://localhost:5000/verify-captcha", {
+      const res = await fetch("https://backend-brain-1.onrender.com/verify-captcha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ captcha: userCaptcha }),
@@ -84,7 +75,7 @@ const Prediction = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("CAPTCHA verified.");
-        const otpRes = await fetch("http://localhost:5000/send-otp", {
+        const otpRes = await fetch("https://backend-brain-1.onrender.com/send-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
@@ -111,7 +102,7 @@ const Prediction = () => {
   const handleOtpSubmit = async () => {
     setVerifying(true);
     try {
-      const res = await fetch("http://localhost:5000/verify-otp", {
+      const res = await fetch("https://backend-brain-1.onrender.com/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: userOtp }),
@@ -135,7 +126,7 @@ const Prediction = () => {
   return (
     <div
       className="min-h-screen bg-cover bg-center px-4 py-10 text-white relative"
-      style={{ backgroundImage: `url(${brainBg})`}}
+      style={{ backgroundImage: `url(${brainBg})` }}
     >
       {(loading || verifying) && (
         <div className="absolute inset-0 z-40 bg-black/60 backdrop-blur-sm flex items-center justify-center">
