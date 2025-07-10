@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "./Admin.css";
 import { motion } from 'framer-motion';
 
-
-
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -12,35 +10,37 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setMessage("");
+    e.preventDefault();
+    setMessage("");
 
-  try {
+    try {
+      const response = await fetch("http://localhost:5000/admin-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-    const response = await fetch("https://backend-brain-1.onrender.com/admin-login", {
+      const data = await response.json();
 
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
+      if (response.ok && data.success) {
+        // Save email and role to localStorage
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("isAdmin", "true");
+        localStorage.setItem("role", data.role); // either 'admin' or 'super_admin'
 
-    const data = await response.json();
+        setMessage(`${data.role === "super_admin" ? "Super Admin" : "Admin"} login successful!`);
 
-    if (response.ok && data.success) {
-      localStorage.setItem("email", data.email);
-      localStorage.setItem("isAdmin", "true");
-
-      setMessage("Login successful!");
-      navigate("/");
-    } else {
-      setMessage(data.message || "Login failed");
+        // Redirect accordingly (you can customize paths for different roles)
+        navigate("/"); // or `/admin-dashboard` for admin
+      } else {
+        setMessage(data.message || "Login failed");
+      }
+    } catch (error) {
+      setMessage("Error: Could not connect to server");
     }
-  } catch {
-    setMessage("Error: Could not connect to server");
-  }
-};
+  };
 
   return (
     <div className="bg-white text-gray-900 font-nunito">
@@ -95,7 +95,7 @@ const AdminLogin = () => {
               Sign In
             </button>
             {message && (
-              <p className={`mt-4 text-center ${message.includes("success") ? "text-green-600" : "text-red-600"}`}>
+              <p className={`mt-4 text-center ${message.toLowerCase().includes("success") ? "text-green-600" : "text-red-600"}`}>
                 {message}
               </p>
             )}
