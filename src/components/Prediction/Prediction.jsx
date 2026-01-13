@@ -26,7 +26,7 @@ const Prediction = () => {
 
   const refreshCaptcha = () => {
     setUserCaptcha("");
-    setCaptchaImg(`https://backend-brain-1.onrender.com/generate-captcha?${Date.now()}`);
+    setCaptchaImg(`https://backend-brain1.onrender.com/generate-captcha?${Date.now()}`);
     setShowCaptcha(true);
     setOtpSent(false);
   };
@@ -49,7 +49,7 @@ const Prediction = () => {
     setResult(null);
 
     try {
-      const response = await fetch("https://backend-brain-1.onrender.com/predict", {
+      const response = await fetch("https://backend-brain1.onrender.com/predict", {
         method: "POST",
         body: formData,
       });
@@ -65,7 +65,7 @@ const Prediction = () => {
   const handleCaptchaSubmit = async () => {
     setVerifying(true);
     try {
-      const res = await fetch("https://backend-brain-1.onrender.com/verify-captcha", {
+      const res = await fetch("https://backend-brain1.onrender.com/verify-captcha", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ captcha: userCaptcha }),
@@ -75,7 +75,7 @@ const Prediction = () => {
       const data = await res.json();
       if (res.ok) {
         toast.success("CAPTCHA verified.");
-        const otpRes = await fetch("https://backend-brain-1.onrender.com/send-otp", {
+        const otpRes = await fetch("https://backend-brain1.onrender.com/send-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
@@ -102,7 +102,7 @@ const Prediction = () => {
   const handleOtpSubmit = async () => {
     setVerifying(true);
     try {
-      const res = await fetch("https://backend-brain-1.onrender.com/verify-otp", {
+      const res = await fetch("https://backend-brain1.onrender.com/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp: userOtp }),
