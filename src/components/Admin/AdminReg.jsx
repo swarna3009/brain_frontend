@@ -75,7 +75,7 @@ const AdminReg = () => {
 
     setLoading(true);
     try {
-      const res = await fetch("https://backend-brain-1.onrender.com/verify-admin-otp", {
+      const res = await fetch("https://backend-brain1.onrender.com/verify-admin-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
