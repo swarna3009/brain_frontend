@@ -18,7 +18,7 @@ const Login = ({ role = "user" }) => {
 
     try {
       const loginEndpoint = role === "admin" ? "/admin-login" : "/user-login";
-      const response = await fetch(`https://backend-brain1.onrender.com${loginEndpoint}`, {
+      const response = await fetch(`https://backend-brain1-beqb.onrender.com${loginEndpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
