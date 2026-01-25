@@ -27,7 +27,7 @@ const Contact = () => {
   }
 
     try {
-      await axios.post("https://backend-brain1.onrender.com/contact", form);
+      await axios.post("https://backend-brain1-beqb.onrender.com/contact", form);
       alert("Message sent successfully!");
       setForm({ fullName: "", email: "", subject: "", message: "" });
     } catch (err) {
