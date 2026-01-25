@@ -7,7 +7,7 @@ const ManageContact = () => {
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch("https://backend-brain1.onrender.com/admin/contacts");
+      const response = await fetch("https://backend-brain1-beqb.onrender.com/admin/contacts");
       const data = await response.json();
 
       if (response.ok) {
@@ -28,7 +28,7 @@ const ManageContact = () => {
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`https://backend-brain1.onrender.com/admin/contacts/${id}`, {
+      const response = await fetch(`https://backend-brain1-beqb.onrender.com/admin/contacts/${id}`, {
         method: "DELETE",
       });
 
